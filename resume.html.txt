@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人简历 - 模拟经营风</title>
+    <meta name="description" content="梦幻西餐厅风格个人简历，复古经营游戏界面设计">
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        /* ===== Tailwind 自定义配色配置 ===== */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'game-orange': '#F4A460',
+                        'game-pink': '#F0C8D0',
+                        'game-purple': '#C8B8E8',
+                        'game-mint': '#B8D8C8',
+                        'game-cream': '#FFF8F0',
+                        'game-dark': '#3D2C2C',
+                        'game-border': '#6B4C3B',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- ==================== 游戏主题自定义CSS ==================== -->
+    <style>
+        /* ================================================================
+           CSS变量 - 梦幻西餐厅游戏UI色彩体系
+           ================================================================ */
+        :root {
+            --orange: #F4A460;
+            --orange-light: #FFD0A0;
+            --orange-dark: #D4883C;
+            --pink: #F0C8D0;
+            --pink-light: #FFE8EC;
+            --pink-dark: #D8A0AC;
+            --purple: #C8B8E8;
+            --purple-light: #E8DCF8;
+            --purple-dark: #A898CC;
+            --mint: #B8D8C8;
+            --mint-light: #DCF0E4;
+            --mint-dark: #8CB8A0;
+            --cream: #FFF8F0;
+            --dark: #3D2C2C;
+            --text-main: #3D2C2C;
+            --text-sub: #6B5A5A;
+            --border-wood: #8B7355;
+            --border-gold: #D4A860;
+            --card-bg: rgba(255, 252, 247, 0.85);
+            --card-bg-solid: #FFFCF7;
+            --shadow-game: 0 4px 0 #5C4033, 0 8px 24px rgba(60, 30, 10, 0.18);
+            --shadow-card: 0 3px 12px rgba(100, 60, 30, 0.12);
+            --radius-game: 18px;
+            --radius-card: 14px;
+            --radius-tag: 20px;
+        }
+
+        /* ================================================================
+           全局重置 & 字体
+           ================================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background-color: #F5E6D8;
+            line-height: 1.6;
+        }
+
+        /* ================================================================
+           多层渐变多彩柔化背景
+           ================================================================ */
+        .bg-layers {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            /* 多层径向渐变叠加，模拟柔光色彩氛围 */
+            background:
+                /* 底层：暖橙奶粉底 */
+                radial-gradient(ellipse 80% 60% at 20% 20%, #FFDAB9 0%, transparent 55%),
+                radial-gradient(ellipse 70% 50% at 80% 10%, #FFE4E1 0%, transparent 55%),
+                radial-gradient(ellipse 75% 55% at 50% 40%, #E8DCF8 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 90% 70%, #DCF0E4 0%, transparent 50%),
+                radial-gradient(ellipse 70% 60% at 10% 80%, #FFF0D0 0%, transparent 50%),
+                radial-gradient(ellipse 90% 70% at 50% 90%, #FFDAB9 0%, transparent 60%),
+                /* 底色 */
+                linear-gradient(180deg, #FFF5EC 0%, #F8ECD8 30%, #F0E8DC 60%, #FFF5EC 100%);
+            transition: all 0.8s ease;
+        }
+
+        /* 滚动时渐变背景微调 */
+        body.scrolled .bg-layers {
+            background:
+                radial-gradient(ellipse 80% 60% at 25% 25%, #FFD0A0 0%, transparent 55%),
+                radial-gradient(ellipse 70% 50% at 75% 15%, #FFD8E0 0%, transparent 55%),
+                radial-gradient(ellipse 75% 55% at 45% 45%, #D8CCF0 0%, transparent 50%),
+                radial-gradient(ellipse 60% 50% at 85% 65%, #C8E8D8 0%, transparent 50%),
+                radial-gradient(ellipse 70% 60% at 15% 75%, #FFE8C0 0%, transparent 50%),
+                radial-gradient(ellipse 90% 70% at 55% 85%, #FFD0A0 0%, transparent 60%),
+                linear-gradient(180deg, #FFF8F2 0%, #F5E8D8 30%, #EDE5D8 60%, #FFF8F2 100%);
+        }
+
+        /* ================================================================
+           浅彩色方格地砖纹理（呼应游戏店内地砖元素）
+           ================================================================ */
+        .tile-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.10;
+            /* 棋盘格纹理 */
+            background-image:
+                linear-gradient(45deg, #D4A860 1px, transparent 1px),
+                linear-gradient(-45deg, #D4A860 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+
+        /* 逆方向第二层纹理增加丰富度 */
+        .tile-pattern-2 {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.06;
+            background-image:
+                linear-gradient(0deg, #C8B8E8 1px, transparent 1px),
+                linear-gradient(90deg, #C8B8E8 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        /* ================================================================
+           星光粒子Canvas
+           ================================================================ */
+        #starCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ================================================================
+           游戏窗口外框 - 模拟游戏弹窗质感
+           ================================================================ */
+        .game-window {
+            position: relative;
+            max-width: 1100px;
+            margin: 30px auto 20px;
+            background: linear-gradient(180deg,
+                rgba(255, 252, 247, 0.95) 0%,
+                rgba(255, 250, 243, 0.97) 100%);
+            border: 4px solid #6B4C3B;
+            border-radius: var(--radius-game);
+            box-shadow:
+                inset 0 0 0 2px #D4A860,
+                0 0 0 6px #3D2C2C,
+                0 0 0 10px #8B7355,
+                0 8px 40px rgba(30, 15, 5, 0.35);
+            overflow: hidden;
+            animation: windowAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes windowAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.92) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* 窗口标题栏 */
+        .game-titlebar {
+            background: linear-gradient(180deg, #8B7355 0%, #6B4C3B 40%, #5C4033 100%);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #D4A860;
+        }
+
+        .titlebar-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .titlebar-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 2px rgba(255,255,255,0.3);
+        }
+        .titlebar-dot.red    { background: #E85D5D; }
+        .titlebar-dot.yellow { background: #F0C060; }
+        .titlebar-dot.green  { background: #60C060; }
+
+        .titlebar-label {
+            color: #F0D8A0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* ================================================================
+           页面内部内容容器
+           ================================================================ */
+        .game-content {
+            padding: 28px 30px 20px;
+        }
+
+        /* ================================================================
+           主布局：左右分栏
+           ================================================================ */
+        .main-layout {
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        /* 左侧侧边栏 */
+        .sidebar-left {
+            flex: 0 0 280px;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* 右侧主内容 */
+        .main-right {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ================================================================
+           头部标题区
+           ================================================================ */
+        .header-section {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            border-bottom: 2px dashed #D4A860;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-bottom: 6px;
+            /* 渐变艺术字 */
+            background: linear-gradient(135deg,
+                #F4A460 0%, #E88060 20%, #D06080 40%,
+                #C090D0 55%, #80B898 70%, #F4A460 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShine 4s ease-in-out infinite;
+            text-shadow: none;
+            filter: drop-shadow(2px 3px 2px rgba(100, 60, 30, 0.2));
+        }
+
+        @keyframes titleShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .header-decor {
+            font-size: 1.3rem;
+            display: inline-block;
+            animation: decorBounce 2s ease-in-out infinite;
+        }
+        .header-decor:nth-child(1) { animation-delay: 0s; }
+        .header-decor:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes decorBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ================================================================
+           游戏风格卡片通用样式
+           ================================================================ */
+        .game-card {
+            background: var(--card-bg);
+            border: 2px solid #D4A860;
+            border-radius: var(--radius-card);
+            padding: 20px 22px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* 卡片内侧装饰边框 */
+            outline: 1px dashed rgba(212, 168, 96, 0.3);
+            outline-offset: -6px;
+            animation: cardFadeIn 0.6s ease backwards;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 悬停：上浮 + 阴影加深 */
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 28px rgba(100, 60, 30, 0.2),
+                        0 4px 0 #D4A860;
+            border-color: #C89850;
+        }
+
+        /* 卡片角落装饰小图标 */
+        .card-corner-decor {
+            position: absolute;
+            font-size: 1.4rem;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .card-corner-decor.tl { top: -6px; left: 6px; }
+        .card-corner-decor.tr { top: -6px; right: 6px; }
+        .card-corner-decor.bl { bottom: -6px; left: 6px; }
+        .card-corner-decor.br { bottom: -6px; right: 6px; }
+
+        /* 卡片标题 */
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+            border-image: linear-gradient(90deg, #F4A460, #E0C0D0, #C8B8E8) 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* ================================================================
+           左侧人物信息面板
+           ================================================================ */
+        .profile-card {
+            background: var(--card-bg-solid);
+            border: 3px solid #D4A860;
+            border-radius: var(--radius-card);
+            padding: 24px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-game);
+            /* 内部装饰框 */
+            outline: 2px dashed rgba(180, 140, 100, 0.4);
+            outline-offset: -10px;
+            animation: cardFadeIn 0.6s ease 0.15s backwards;
+        }
+
+        /* 头像框 */
+        .avatar-frame {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            position: relative;
+            padding: 5px;
+            background: linear-gradient(135deg, #F4A460, #E0A0C0, #C8B8E8, #B8D8C8);
+            background-size: 300% 300%;
+            animation: avatarBorder 4s ease infinite;
+            box-shadow: 0 4px 16px rgba(180, 120, 80, 0.3);
+        }
+
+        @keyframes avatarBorder {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            background: #F0E0D0;
+        }
+
+        /* 姓名 */
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #D4883C, #C06080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #FFDAB9, #FFC8D0);
+            color: #8B5A3C;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* 信息列表 */
+        .info-list {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 0;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            border-bottom: 1px dotted rgba(180, 140, 100, 0.3);
+        }
+
+        .info-item .info-icon {
+            font-size: 1rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .info-item .info-label {
+            color: var(--text-sub);
+            font-size: 0.78rem;
+            min-width: 50px;
+        }
+
+        /* 技能标签云 */
+        .section-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #8B7355;
+            text-align: left;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 5px 14px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: var(--radius-tag);
+            color: white;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            transition: all 0.25s ease;
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* 技能标签颜色变体 */
+        .skill-tag.orange { background: linear-gradient(135deg, #F4A460, #E89050); }
+        .skill-tag.pink   { background: linear-gradient(135deg, #E8A0B8, #D07090); }
+        .skill-tag.purple { background: linear-gradient(135deg, #B8A0D8, #A080C0); }
+        .skill-tag.mint   { background: linear-gradient(135deg, #80B898, #60A080); }
+        .skill-tag.peach  { background: linear-gradient(135deg, #F0B090, #E09070); }
+        .skill-tag.lavender { background: linear-gradient(135deg, #C8B8E8, #B098D0); }
+
+        /* 自我评价 */
+        .self-eval {
+            text-align: left;
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(255, 245, 235, 0.7), rgba(255, 240, 245, 0.5));
+            border-radius: 10px;
+            border-left: 3px solid #F4A460;
+            font-style: italic;
+        }
+
+        /* ================================================================
+           右侧内容区 - 时间线条目
+           ================================================================ */
+        .timeline-item {
+            position: relative;
+            padding: 10px 0 10px 22px;
+            margin-bottom: 6px;
+            border-left: 2px solid rgba(212, 168, 96, 0.4);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 14px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F4A460, #E89050);
+            box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.25);
+        }
+
+        .timeline-item:last-child {
+            border-left-color: transparent;
+        }
+
+        .timeline-period {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #D4883C;
+            margin-bottom: 3px;
+        }
+
+        .timeline-title {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .timeline-sub {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 0.8rem;
+            color: #8B7A7A;
+            line-height: 1.6;
+        }
+
+        /* 项目卡片迷你版 */
+        .mini-project {
+            background: linear-gradient(135deg, rgba(255,245,235,0.5), rgba(255,240,248,0.5));
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(212, 168, 96, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .mini-project:hover {
+            border-color: #D4A860;
+            box-shadow: 0 3px 10px rgba(180, 120, 60, 0.12);
+            transform: translateX(4px);
+        }
+
+        .mini-project-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 3px;
+        }
+
+        .mini-project-tech {
+            font-size: 0.75rem;
+            color: #D4883C;
+            margin-bottom: 3px;
+        }
+
+        .mini-project-desc {
+            font-size: 0.78rem;
+            color: #8B7A7A;
+            line-height: 1.5;
+        }
+
+        /* 证书记录项 */
+        .cert-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dotted rgba(180,140,100,0.2);
+            font-size: 0.88rem;
+        }
+
+        .cert-badge {
+            font-size: 0.72rem;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .cert-badge.gold   { background: #FFF0D0; color: #A07030; }
+        .cert-badge.silver { background: #F0F0F0; color: #707070; }
+        .cert-badge.bronze { background: #FFF0E8; color: #B07050; }
+
+        /* 兴趣特长网格 */
+        .interest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .interest-item {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255,245,235,0.6), rgba(255,240,248,0.4));
+            border: 1px solid rgba(212, 168, 96, 0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .interest-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 14px rgba(180, 120, 60, 0.15);
+            border-color: #D4A860;
+        }
+
+        .interest-emoji {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .interest-label {
+            font-size: 0.78rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* ================================================================
+           按钮动效
+           ================================================================ */
+        .game-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 22px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .game-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-btn:hover::after {
+            opacity: 1;
+        }
+
+        .game-btn:active {
+            transform: scale(0.94);
+        }
+
+        .game-btn.orange { background: linear-gradient(135deg, #F4A460, #E08040); box-shadow: 0 4px 14px rgba(244, 164, 96, 0.4); }
+        .game-btn.pink   { background: linear-gradient(135deg, #E8A0B8, #D07090); box-shadow: 0 4px 14px rgba(224, 128, 160, 0.4); }
+        .game-btn.purple { background: linear-gradient(135deg, #B8A0D8, #A080C0); box-shadow: 0 4px 14px rgba(176, 144, 200, 0.4); }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* ================================================================
+           页脚
+           ================================================================ */
+        .game-footer {
+            text-align: center;
+            padding: 18px 20px 10px;
+            border-top: 2px dashed rgba(212, 168, 96, 0.4);
+            margin-top: 10px;
+        }
+
+        .game-footer p {
+            font-size: 0.78rem;
+            color: var(--text-sub);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-decor {
+            font-size: 1rem;
+        }
+
+        /* ================================================================
+           响应式 - 移动端
+           ================================================================ */
+        @media (max-width: 900px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .sidebar-left {
+                flex: none;
+                position: static;
+                width: 100%;
+            }
+
+            .game-window {
+                margin: 12px;
+                border-radius: 12px;
+                border-width: 3px;
+                box-shadow:
+                    inset 0 0 0 1px #D4A860,
+                    0 0 0 4px #3D2C2C,
+                    0 0 0 7px #8B7355,
+                    0 6px 24px rgba(30, 15, 5, 0.3);
+            }
+
+            .game-content {
+                padding: 16px;
+            }
+
+            .header-title {
+                font-size: 2rem;
+                letter-spacing: 3px;
+            }
+
+            .profile-card {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+                text-align: left;
+                align-items: center;
+                padding: 16px;
+            }
+
+            .avatar-frame {
+                width: 80px;
+                height: 80px;
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            .profile-info-mobile {
+                flex: 1;
+                min-width: 180px;
+            }
+
+            .skill-tags {
+                justify-content: flex-start;
+            }
+
+            .interest-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-window {
+                margin: 6px;
+                border-radius: 10px;
+                border-width: 2px;
+                box-shadow:
+                    0 0 0 3px #3D2C2C,
+                    0 0 0 5px #8B7355,
+                    0 4px 16px rgba(30, 15, 5, 0.25);
+            }
+
+            .game-content {
+                padding: 10px;
+            }
+
+            .header-title {
+                font-size: 1.6rem;
+                letter-spacing: 2px;
+            }
+
+            .header-subtitle {
+                font-size: 0.78rem;
+                gap: 6px;
+            }
+
+            .game-card {
+                padding: 14px;
+                border-radius: 10px;
+            }
+
+            .interest-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .profile-card {
+                padding: 12px;
+            }
+
+            .card-title {
+                font-size: 1.05rem;
+            }
+
+            .game-footer p {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 背景层 ==================== -->
+    <div class="bg-layers" id="bgLayers"></div>
+    <div class="tile-pattern"></div>
+    <div class="tile-pattern-2"></div>
+    <canvas id="starCanvas"></canvas>
+
+    <!-- ==================== 游戏窗口容器 ==================== -->
+    <div class="game-window" id="gameWindow">
+        <!-- 模拟游戏窗口标题栏 -->
+        <div class="game-titlebar">
+            <div class="titlebar-dots">
+                <div class="titlebar-dot red"></div>
+                <div class="titlebar-dot yellow"></div>
+                <div class="titlebar-dot green"></div>
+            </div>
+            <span class="titlebar-label">✦ 个人简历 · RESUME ✦</span>
+            <div style="width: 50px;"></div>
+        </div>
+
+        <!-- 游戏窗口内容区 -->
+        <div class="game-content">
+
+            <!-- ==================== 头部标题区 ==================== -->
+            <header class="header-section">
+                <h1 class="header-title">个人简历</h1>
+                <p class="header-subtitle">
+                    <span class="header-decor">🍽️</span>
+                    用热爱烹饪每一份项目 · 用心经营每一步成长
+                    <span class="header-decor">☕</span>
+                </p>
+            </header>
+
+            <!-- ==================== 左右分栏布局 ==================== -->
+            <div class="main-layout">
+
+                <!-- ========== 左侧侧边栏：人物信息面板 ========== -->
+                <aside class="sidebar-left">
+                    <div class="profile-card" id="profileCard">
+                        <!-- 头像框 -->
+                        <div class="avatar-frame" id="avatarMobile">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=chef&backgroundColor=F4A460,FFDAB9,F0C8D0,C8B8E8,B8D8C8"
+                                 alt="头像"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#FFDAB9,#F0C8D0);display:none;align-items:center;justify-content:center;font-size:2.5rem;color:white;">
+                                👨‍🍳
+                            </div>
+                        </div>
+
+                        <!-- 姓名与标签 -->
+                        <div class="profile-info-mobile">
+                            <div class="profile-name">雷鸣权</div>
+                            <div class="profile-badge">🍳 高级前端开发工程师</div>
+                        </div>
+
+                        <!-- 基本信息列表 -->
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-icon">🎂</span>
+                                <span class="info-label">年龄</span>
+                                <span>26岁</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">📞</span>
+                                <span class="info-label">电话</span>
+                                <span>138-0000-8888</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">📧</span>
+                                <span class="info-label">邮箱</span>
+                                <span>zhangmy@example.com</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span class="info-label">城市</span>
+                                <span>广东·深圳</span>
+                            </div>
+                        </div>
+
+                        <!-- 技能标签云 -->
+                        <div class="section-label">🛠️ 技能标签</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag orange">JavaScript</span>
+                            <span class="skill-tag orange">TypeScript</span>
+                            <span class="skill-tag pink">React</span>
+                            <span class="skill-tag pink">Vue.js</span>
+                            <span class="skill-tag purple">Node.js</span>
+                            <span class="skill-tag mint">HTML5/CSS3</span>
+                            <span class="skill-tag peach">Git</span>
+                            <span class="skill-tag lavender">Webpack</span>
+                            <span class="skill-tag orange">Figma</span>
+                            <span class="skill-tag mint">SQL</span>
+                        </div>
+
+                        <!-- 简短自我评价 -->
+                        <div class="section-label">💬 关于我</div>
+                        <div class="self-eval">
+                            「3年前端开发经验，热爱用代码构建精致用户体验。追求像素级还原与交互流畅度，享受将设计稿"烹调"成美味产品的过程。热衷于探索新技术，保持持续学习的态度。」
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- ========== 右侧主内容区 ========== -->
+                <section class="main-right">
+
+                    <!-- 模块1：教育经历 -->
+                    <div class="game-card" id="education">
+                        <span class="card-corner-decor tl">📚</span>
+                        <span class="card-corner-decor tr">🎓</span>
+                        <div class="card-title">
+                            <span class="card-title-icon" style="background:linear-gradient(135deg,#FFE0C0,#FFD0B0);">🍎</span>
+                            教育经历
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-period">2020.09 - 2024.06</div>
+                            <div class="timeline-title">深圳大学 · 计算机科学与技术</div>
+                            <div class="timeline-sub">本科 · 工学学士</div>
+                            <div class="timeline-desc">
+                                主修课程：数据结构与算法、操作系统、计算机网络、数据库原理、Web前端开发。
+                                GPA 3.7/4.0，连续三年获得校级学业奖学金。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模块2：实习/工作经历 -->
+                    <div class="game-card" id="work">
+                        <span class="card-corner-decor tl">💼</span>
+                        <span class="card-corner-decor tr">🏢</span>
+                        <div class="card-title">
+                            <span class="card-title-icon" style="background:linear-gradient(135deg,#FFD8E8,#FFC8D8);">💻</span>
+                            实习 / 工作经历
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-period">2024.07 - 至今</div>
+                            <div class="timeline-title">腾讯科技（深圳）有限公司</div>
+                            <div class="timeline-sub">前端开发工程师 · TEG事业群</div>
+                            <div class="timeline-desc">
+                                负责内部效能平台前端架构设计与核心模块开发。主导组件库标准化建设，推动团队代码规范落地，提升研发效率约30%。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-period">2023.06 - 2023.09</div>
+                            <div class="timeline-title">字节跳动 · 暑期实习</div>
+                            <div class="timeline-sub">前端开发实习生 · 抖音电商</div>
+                            <div class="timeline-desc">
+                                参与商家后台管理系统迭代开发，独立完成数据看板模块与批量操作功能，上线后日均使用量超5000次。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模块3：项目实践经历 -->
+                    <div class="game-card" id="projects">
+                        <span class="card-corner-decor tl">🚀</span>
+                        <span class="card-corner-decor tr">⭐</span>
+                        <div class="card-title">
+                            <span class="card-title-icon" style="background:linear-gradient(135deg,#E8D8F8,#D8C8F0);">🔥</span>
+                            项目实践经历
+                        </div>
+                        <div class="mini-project">
+                            <div class="mini-project-name">🍜 「烟火美食」小程序</div>
+                            <div class="mini-project-tech">技术栈：微信小程序 · TDesign · 云开发</div>
+                            <div class="mini-project-desc">
+                                独立开发的一款深圳本地美食探店打卡小程序，支持地图定位、用户打卡日记、美食盲盒推荐等功能，累计用户2000+。
+                            </div>
+                        </div>
+                        <div class="mini-project">
+                            <div class="mini-project-name">📊 内部效能数据可视化平台</div>
+                            <div class="mini-project-tech">技术栈：React · TypeScript · ECharts · Ant Design</div>
+                            <div class="mini-project-desc">
+                                构建了包含多维数据分析、实时监控看板、自动化报表等模块的效能平台，服务团队50+成员。
+                            </div>
+                        </div>
+                        <div class="mini-project">
+                            <div class="mini-project-name">🎮 模拟经营游戏（个人项目）</div>
+                            <div class="mini-project-tech">技术栈：Vue3 · Canvas · Web Audio API</div>
+                            <div class="mini-project-desc">
+                                独立设计开发的西餐厅模拟经营网页游戏，包含店铺装修、菜单管理、顾客AI系统等玩法模块，GitHub Stars 500+。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模块4：语言&证书资质 -->
+                    <div class="game-card" id="certificates">
+                        <span class="card-corner-decor tl">🏅</span>
+                        <span class="card-corner-decor tr">📜</span>
+                        <div class="card-title">
+                            <span class="card-title-icon" style="background:linear-gradient(135deg,#D8F0E0,#C8E8D8);">🏆</span>
+                            语言 & 证书资质
+                        </div>
+                        <div class="cert-item">
+                            <span>🌐</span>
+                            <span style="min-width:80px;font-weight:600;">英语 CET-6</span>
+                            <span class="cert-badge gold">580分</span>
+                            <span style="font-size:0.78rem;color:var(--text-sub);">流利阅读技术文档</span>
+                        </div>
+                        <div class="cert-item">
+                            <span>🇯🇵</span>
+                            <span style="min-width:80px;font-weight:600;">日语 JLPT</span>
+                            <span class="cert-badge silver">N2</span>
+                            <span style="font-size:0.78rem;color:var(--text-sub);">日常沟通能力</span>
+                        </div>
+                        <div class="cert-item">
+                            <span>💻</span>
+                            <span style="min-width:80px;font-weight:600;">软件设计师</span>
+                            <span class="cert-badge gold">中级</span>
+                            <span style="font-size:0.78rem;color:var(--text-sub);">国家软考认证</span>
+                        </div>
+                        <div class="cert-item">
+                            <span>☁️</span>
+                            <span style="min-width:80px;font-weight:600;">AWS认证</span>
+                            <span class="cert-badge bronze">SAA</span>
+                            <span style="font-size:0.78rem;color:var(--text-sub);">解决方案架构师</span>
+                        </div>
+                    </div>
+
+                    <!-- 模块5：兴趣特长 -->
+                    <div class="game-card" id="interests">
+                        <span class="card-corner-decor tl">🎨</span>
+                        <span class="card-corner-decor bl">🎵</span>
+                        <div class="card-title">
+                            <span class="card-title-icon" style="background:linear-gradient(135deg,#FFE8D0,#FFD8C0);">✨</span>
+                            兴趣特长
+                        </div>
+                        <div class="interest-grid">
+                            <div class="interest-item">
+                                <span class="interest-emoji">🎹</span>
+                                <span class="interest-label">钢琴演奏</span>
+                            </div>
+                            <div class="interest-item">
+                                <span class="interest-emoji">📸</span>
+                                <span class="interest-label">摄影街拍</span>
+                            </div>
+                            <div class="interest-item">
+                                <span class="interest-emoji">🍳</span>
+                                <span class="interest-label">烹饪美食</span>
+                            </div>
+                            <div class="interest-item">
+                                <span class="interest-emoji">🏃</span>
+                                <span class="interest-label">长跑健身</span>
+                            </div>
+                            <div class="interest-item">
+                                <span class="interest-emoji">🎮</span>
+                                <span class="interest-label">独立游戏</span>
+                            </div>
+                            <div class="interest-item">
+                                <span class="interest-emoji">📖</span>
+                                <span class="interest-label">阅读写作</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </section><!-- .main-right 结束 -->
+
+            </div><!-- .main-layout 结束 -->
+
+            <!-- ==================== 页脚 ==================== -->
+            <footer class="game-footer">
+                <p>
+                    <span class="footer-decor">🍽️</span>
+                    模拟经营风个人简历 · 用心经营每一步成长
+                    <span class="footer-decor">🍰</span>
+                </p>
+                <p style="font-size:0.7rem;margin-top:4px;opacity:0.6;">
+                    Design inspired by 梦幻西餐厅 · Made with ❤️ & Vanilla JS
+                </p>
+            </footer>
+
+        </div><!-- .game-content 结束 -->
+    </div><!-- .game-window 结束 -->
+
+    <!-- ==================== 原生JavaScript交互逻辑 ==================== -->
+    <script>
+        /* ================================================================
+           星光粒子Canvas动画
+           ================================================================ */
+        (function initStars() {
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 存储粒子信息
+            const stars = [];
+            const STAR_COUNT = 80; // 星光粒子数量
+
+            // 粒子颜色：暖色系微光
+            const starColors = [
+                'rgba(255, 220, 180, 0.7)',
+                'rgba(255, 200, 200, 0.6)',
+                'rgba(220, 200, 240, 0.6)',
+                'rgba(200, 230, 210, 0.6)',
+                'rgba(255, 240, 200, 0.7)',
+                'rgba(255, 255, 240, 0.8)',
+            ];
+
+            /**
+             * 调整Canvas尺寸以匹配窗口
+             */
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            /**
+             * 初始化星光粒子
+             */
+            function createStars() {
+                stars.length = 0;
+                for (let i = 0; i < STAR_COUNT; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 2.5 + 0.5,
+                        color: starColors[Math.floor(Math.random() * starColors.length)],
+                        // 闪烁速度与相位
+                        speed: Math.random() * 0.02 + 0.005,
+                        phase: Math.random() * Math.PI * 2,
+                        // 缓慢漂移
+                        driftX: (Math.random() - 0.5) * 0.3,
+                        driftY: (Math.random() - 0.5) * 0.3,
+                    });
+                }
+            }
+
+            /**
+             * 每帧绘制星光
+             */
+            function drawStars(timestamp) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                stars.forEach(star => {
+                    // 闪烁：通过正弦波控制透明度
+                    const alpha = 0.3 + 0.7 * Math.abs(Math.sin(timestamp * star.speed + star.phase));
+
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = star.color.replace(/[\d.]+\)$/, alpha.toFixed(2) + ')');
+                    ctx.fill();
+
+                    // 微光晕效果
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius * 2.5, 0, Math.PI * 2);
+                    ctx.fillStyle = star.color.replace(/[\d.]+\)$/, (alpha * 0.18).toFixed(3) + ')');
+                    ctx.fill();
+
+                    // 缓慢漂移
+                    star.x += star.driftX;
+                    star.y += star.driftY;
+
+                    // 边界循环
+                    if (star.x < -10) star.x = canvas.width + 10;
+                    if (star.x > canvas.width + 10) star.x = -10;
+                    if (star.y < -10) star.y = canvas.height + 10;
+                    if (star.y > canvas.height + 10) star.y = -10;
+                });
+
+                requestAnimationFrame(drawStars);
+            }
+
+            // 初始化
+            resizeCanvas();
+            createStars();
+            requestAnimationFrame(drawStars);
+
+            // 窗口大小变化时重新调整
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                createStars();
+            });
+        })();
+
+        /* ================================================================
+           滚动监听：切换body class以实现背景渐变微调
+           ================================================================ */
+        (function initScrollEffect() {
+            let scrollTicking = false;
+
+            function onScroll() {
+                if (!scrollTicking) {
+                    requestAnimationFrame(() => {
+                        if (window.scrollY > 80) {
+                            document.body.classList.add('scrolled');
+                        } else {
+                            document.body.classList.remove('scrolled');
+                        }
+                        scrollTicking = false;
+                    });
+                    scrollTicking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+        })();
+
+        /* ================================================================
+           游戏卡片悬浮互动增强
+           ================================================================ */
+        (function initCardInteractions() {
+            const cards = document.querySelectorAll('.game-card');
+
+            cards.forEach(card => {
+                // 鼠标进入：角落图标微动
+                card.addEventListener('mouseenter', () => {
+                    const corners = card.querySelectorAll('.card-corner-decor');
+                    corners.forEach((corner, i) => {
+                        corner.style.transition = 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+                        corner.style.opacity = '0.7';
+                        corner.style.transform = 'scale(1.3)';
+                        corner.style.transitionDelay = (i * 0.05) + 's';
+                    });
+                });
+
+                // 鼠标离开：恢复
+                card.addEventListener('mouseleave', () => {
+                    const corners = card.querySelectorAll('.card-corner-decor');
+                    corners.forEach(corner => {
+                        corner.style.opacity = '0.35';
+                        corner.style.transform = 'scale(1)';
+                        corner.style.transitionDelay = '0s';
+                    });
+                });
+            });
+        })();
+
+        /* ================================================================
+           技能标签hover音效感微互动
+           ================================================================ */
+        (function initSkillTags() {
+            const tags = document.querySelectorAll('.skill-tag');
+
+            tags.forEach(tag => {
+                tag.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.12) rotate(-1deg)';
+                });
+                tag.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+        })();
+
+        /* ================================================================
+           兴趣特长项微互动
+           ================================================================ */
+        (function initInterests() {
+            const interests = document.querySelectorAll('.interest-item');
+
+            interests.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    const emoji = this.querySelector('.interest-emoji');
+                    if (emoji) {
+                        emoji.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+                        emoji.style.transform = 'scale(1.4) rotate(10deg)';
+                    }
+                });
+                item.addEventListener('mouseleave', function() {
+                    const emoji = this.querySelector('.interest-emoji');
+                    if (emoji) {
+                        emoji.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            });
+        })();
+
+        /* ================================================================
+           页面加载完成日志
+           ================================================================ */
+        console.log('🍽️  梦幻西餐厅风格个人简历加载完成！');
+        console.log('   ✨ 欢迎来到模拟经营游戏界面 ✨');
+        console.log('   📋 所有内容均为示例数据，请按需修改');
+    </script>
+
+</body>
+</html>
