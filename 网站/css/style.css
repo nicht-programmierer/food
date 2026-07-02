@@ -1,0 +1,597 @@
+/* ============================================================
+   深圳小众烟火美食打卡 - 全局样式表
+   风格：暖黄治愈烟火风 | 兼容桌面端 + 移动端
+   ============================================================ */
+
+/* ============ CSS 变量（设计令牌） ============ */
+:root {
+    /* 主色调 - 暖黄烟火系 */
+    --color-primary: #FF6B35;          /* 主色：烟火橙 */
+    --color-primary-light: #FF8C5A;    /* 浅橙 */
+    --color-primary-dark: #E55A2B;     /* 深橙 */
+    --color-secondary: #F7931E;        /* 辅色：金黄 */
+    --color-accent: #FFD166;           /* 强调色：明亮黄 */
+
+    /* 背景色系 */
+    --bg-page: #FFF8F0;                /* 页面底色：暖奶油 */
+    --bg-card: #FFFFFF;                /* 卡片底色 */
+    --bg-warm: #FFF3E6;               /* 暖色背景块 */
+
+    /* 文字色系 */
+    --text-primary: #4E342E;           /* 主文字：深棕 */
+    --text-secondary: #8D6E63;         /* 次级文字：浅棕 */
+    --text-light: #BCAAA4;             /* 浅色文字 */
+    --text-white: #FFFFFF;
+
+    /* 边框与阴影 */
+    --border-color: #FFE0B2;
+    --shadow-sm: 0 2px 8px rgba(255, 107, 53, 0.08);
+    --shadow-md: 0 4px 16px rgba(255, 107, 53, 0.12);
+    --shadow-lg: 0 8px 24px rgba(255, 107, 53, 0.15);
+
+    /* 圆角 */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    /* 间距 */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+
+    /* 导航栏高度 */
+    --nav-height: 64px;
+
+    /* 过渡动画 */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* 字体 */
+    --font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+}
+
+/* ============ CSS Reset & 基础样式 ============ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    background-color: var(--bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* 页面加载淡入动画 */
+    animation: pageFadeIn 0.6s ease;
+    /* 底部留白给可能的固定栏 */
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 页面加载淡入动画 */
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 卡片上滑淡入动画（给列表卡片用） */
+@keyframes cardSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 轻微弹跳动画（按钮交互） */
+@keyframes gentleBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 烟火闪烁动画（盲盒按钮） */
+@keyframes fireGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 107, 53, 0.4),
+                    0 0 30px rgba(255, 107, 53, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 107, 53, 0.6),
+                    0 0 50px rgba(255, 107, 53, 0.35),
+                    0 0 75px rgba(247, 147, 30, 0.2);
+    }
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* 旋转动画（加载指示器） */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    transition: border-color var(--transition-fast);
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+/* ============ 顶部导航栏 ============ */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 248, 240, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-lg);
+}
+
+.navbar-inner {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo / 品牌名 */
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.nav-logo .logo-icon {
+    font-size: 1.6rem;
+}
+
+/* 导航链接 */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.nav-links a {
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    color: var(--color-primary);
+    background: var(--bg-warm);
+}
+
+.nav-links a.active {
+    color: var(--color-primary);
+    background: var(--bg-warm);
+    font-weight: 600;
+}
+
+/* 移动端汉堡菜单按钮 */
+.nav-toggle {
+    display: none;
+    background: none;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    padding: 4px;
+}
+
+/* ============ 页面主体容器 ============ */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    min-height: calc(100vh - var(--nav-height) - 100px);
+}
+
+/* 页面标题区 */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-header .subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* ============ 卡片样式（通用） ============ */
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    animation: cardSlideUp 0.5s ease backwards;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* 食物图片占位区（CSS渐变模拟） */
+.food-img-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.food-img-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.15) 100%);
+}
+
+/* 不同色系的图片占位渐变 */
+.img-grad-1 { background: linear-gradient(135deg, #FF6B35, #FF8C5A); }
+.img-grad-2 { background: linear-gradient(135deg, #F7931E, #FFD166); }
+.img-grad-3 { background: linear-gradient(135deg, #E55A2B, #FF6B35); }
+.img-grad-4 { background: linear-gradient(135deg, #D84315, #F7931E); }
+.img-grad-5 { background: linear-gradient(135deg, #FF8C5A, #FFD166); }
+.img-grad-6 { background: linear-gradient(135deg, #BF360C, #FF6B35); }
+
+/* ============ 按钮样式（通用） ============ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--text-white);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+}
+
+.btn-outline:hover {
+    background: var(--color-primary);
+    color: var(--text-white);
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+/* 收藏按钮（爱心） */
+.btn-fav {
+    background: none;
+    font-size: 1.4rem;
+    padding: 6px;
+    color: var(--text-light);
+    transition: all var(--transition-fast);
+}
+
+.btn-fav:hover {
+    transform: scale(1.2);
+}
+
+.btn-fav.favorited {
+    color: #E53935;
+}
+
+.btn-fav.favorited:hover {
+    animation: gentleBounce 0.4s ease;
+}
+
+/* ============ 标签样式 ============ */
+.tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--bg-warm);
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.tag-district {
+    background: #FFF3E0;
+    color: #E65100;
+    font-weight: 600;
+}
+
+/* ============ 筛选按钮组 ============ */
+.filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--text-white);
+    border-color: var(--color-primary);
+}
+
+/* ============ 页脚 ============ */
+.site-footer {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    color: var(--text-light);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.site-footer .footer-icon {
+    font-size: 1.2rem;
+    vertical-align: middle;
+}
+
+/* ============ 模态弹窗（盲盒推荐） ============ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    animation: pageFadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    max-width: 420px;
+    width: 100%;
+    padding: var(--spacing-xl);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    animation: cardSlideUp 0.4s ease;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    padding: 4px;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-food-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+}
+
+/* ============ Toast 提示 ============ */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: var(--text-white);
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    z-index: 3000;
+    animation: pageFadeIn 0.3s ease;
+    box-shadow: var(--shadow-md);
+    white-space: nowrap;
+}
+
+/* ============ 空状态 ============ */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    color: var(--text-light);
+}
+
+.empty-state .empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--spacing-md);
+}
+
+.empty-state p {
+    font-size: 1rem;
+}
+
+/* ============ 响应式设计 - 平板端 ============ */
+@media (max-width: 768px) {
+    :root {
+        --nav-height: 56px;
+        --spacing-xl: 24px;
+        --spacing-2xl: 36px;
+    }
+
+    /* 导航栏适配 */
+    .nav-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        flex-direction: column;
+        padding: var(--spacing-md);
+        gap: var(--spacing-xs);
+        box-shadow: var(--shadow-md);
+        display: none;
+        z-index: 999;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .page-container {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+}
+
+/* ============ 响应式设计 - 手机端 ============ */
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .filter-btn {
+        padding: 6px 14px;
+        font-size: 0.82rem;
+    }
+
+    .modal-content {
+        padding: var(--spacing-lg);
+    }
+
+    .modal-food-img {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+    }
+}

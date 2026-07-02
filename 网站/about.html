@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于本站 - 深圳小众烟火美食打卡</title>
+    <meta name="description" content="了解深圳小众烟火美食打卡平台，投稿推荐你私藏的宝藏小吃店，一起丰富深圳美食地图。">
+    <!-- 引入公用 CSS 样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 关于页专属样式 -->
+    <style>
+        /* ===== 关于页布局 ===== */
+        .about-container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* ===== 介绍卡片 ===== */
+        .about-intro-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .about-intro-card .intro-icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: var(--spacing-md);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .about-intro-card h2 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .about-intro-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ===== 投稿表单卡片 ===== */
+        .form-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-xl);
+            animation: cardSlideUp 0.5s ease backwards;
+        }
+
+        .form-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .form-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ===== 表单样式 ===== */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .form-group label .required {
+            color: #E53935;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: var(--bg-page);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            transition: all var(--transition-fast);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group .hint {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        /* ===== 操作按钮组 ===== */
+        .form-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-lg);
+        }
+
+        .form-actions .btn {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .btn-copy {
+            background: var(--bg-warm);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-copy:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: white;
+        }
+
+        .btn-copy-success {
+            background: #E8F5E9 !important;
+            border-color: #A5D6A7 !important;
+            color: #2E7D32 !important;
+        }
+
+        /* ===== 预览区 ===== */
+        .preview-area {
+            background: var(--bg-page);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            display: none;
+        }
+
+        .preview-area.show {
+            display: block;
+        }
+
+        .preview-area h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .preview-text {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-md);
+            font-family: 'PingFang SC', 'Microsoft YaHei', monospace;
+            font-size: 0.88rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* ===== 功能清单卡片 ===== */
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--bg-warm);
+            border-radius: var(--radius-md);
+        }
+
+        .feature-item .feature-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .feature-item .feature-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .feature-item .feature-desc {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 顶部导航栏 ==================== -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <!-- Logo -->
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🔥</span>
+                <span>深圳烟火美食</span>
+            </a>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="nav-toggle" aria-label="菜单">☰</button>
+
+            <!-- 导航链接 -->
+            <div class="nav-links">
+                <a href="index.html">🏠 首页</a>
+                <a href="list.html">📋 美食列表</a>
+                <a href="mine.html">💝 我的打卡</a>
+                <a href="about.html" class="active">ℹ️ 关于本站</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== 页面主体 ==================== -->
+    <main class="page-container">
+        <div class="about-container">
+
+            <!-- ========== 页面标题 ========== -->
+            <div class="page-header">
+                <h1>ℹ️ 关于本站</h1>
+                <p class="subtitle">深圳小众烟火美食打卡 — 记录每一份街头好味道</p>
+            </div>
+
+            <!-- ========== 网站介绍 ========== -->
+            <div class="about-intro-card">
+                <span class="intro-icon">🍜</span>
+                <h2>不追网红店，只探真实美味</h2>
+                <p>
+                    这是一个深圳本土美食爱好者自发维护的小众美食收录平台。
+                    我们相信，最动人的味道往往不在商场里，而在巷子深处、菜市场旁边、居民楼下。
+                    每一家收录的店铺都经过真实探店，每一条小贴士都来自实际体验。
+                    希望能帮你发现属于深圳的烟火味道。
+                </p>
+            </div>
+
+            <!-- ========== 功能清单 ========== -->
+            <div class="form-card">
+                <div class="form-card-title">✨ 本站功能</div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔥</span>
+                        <div class="feature-name">美食轮播</div>
+                        <div class="feature-desc">精选店铺轮播展示</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🎲</span>
+                        <div class="feature-name">盲盒推荐</div>
+                        <div class="feature-desc">随机抽取一家小吃</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📍</span>
+                        <div class="feature-name">区域筛选</div>
+                        <div class="feature-desc">福田/南山/宝安/龙华</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⭐</span>
+                        <div class="feature-name">收藏打卡</div>
+                        <div class="feature-desc">想去打卡+吃完标记</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💡</span>
+                        <div class="feature-name">避坑贴士</div>
+                        <div class="feature-desc">真实探店经验分享</div>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📝</span>
+                        <div class="feature-name">投稿收录</div>
+                        <div class="feature-desc">推荐新店收录入库</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 投稿表单 ========== -->
+            <div class="form-card" id="submitForm">
+                <div class="form-card-title">📝 投稿推荐店铺</div>
+                <p class="form-card-desc">
+                    发现了好吃的深圳街头小店？填写以下信息，点击「一键复制」，
+                    将内容发给站长，审核通过后即可收录到网站中！
+                </p>
+
+                <form id="shopSubmitForm" onsubmit="return false;">
+                    <!-- 店铺名称 -->
+                    <div class="form-group">
+                        <label for="shopName"><span class="required">*</span> 店铺名称</label>
+                        <input type="text" id="shopName" placeholder="例如：老王家牛杂" required>
+                    </div>
+
+                    <!-- 区域 + 人均价格 -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shopDistrict"><span class="required">*</span> 所在区域</label>
+                            <select id="shopDistrict" required>
+                                <option value="">请选择区域</option>
+                                <option value="福田">福田区</option>
+                                <option value="南山">南山区</option>
+                                <option value="宝安">宝安区</option>
+                                <option value="龙华">龙华区</option>
+                                <option value="罗湖">罗湖区</option>
+                                <option value="龙岗">龙岗区</option>
+                                <option value="坪山">坪山区</option>
+                                <option value="光明">光明区</option>
+                                <option value="盐田">盐田区</option>
+                                <option value="大鹏">大鹏新区</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="shopPrice"><span class="required">*</span> 人均价格（元）</label>
+                            <input type="number" id="shopPrice" placeholder="例如：25" min="1" max="999" required>
+                        </div>
+                    </div>
+
+                    <!-- 详细地址 -->
+                    <div class="form-group">
+                        <label for="shopAddress"><span class="required">*</span> 精确地址</label>
+                        <input type="text" id="shopAddress" placeholder="例如：深圳市福田区水围村水围街28号" required>
+                    </div>
+
+                    <!-- 营业时间 -->
+                    <div class="form-group">
+                        <label for="shopHours"><span class="required">*</span> 营业时间</label>
+                        <input type="text" id="shopHours" placeholder="例如：11:00 - 23:00（周一休息）" required>
+                    </div>
+
+                    <!-- 特色标签 -->
+                    <div class="form-group">
+                        <label for="shopTags">特色标签（用逗号分隔）</label>
+                        <input type="text" id="shopTags" placeholder="例如：牛杂, 老字号, 街坊推荐">
+                        <p class="hint">用逗号分隔多个标签，建议 2-4 个</p>
+                    </div>
+
+                    <!-- 招牌菜品 -->
+                    <div class="form-group">
+                        <label for="shopSignature">招牌菜品（每行一个）</label>
+                        <textarea id="shopSignature" placeholder="招牌萝卜牛杂&#10;秘制牛腩&#10;咖喱鱼蛋" rows="3"></textarea>
+                    </div>
+
+                    <!-- 简短介绍 -->
+                    <div class="form-group">
+                        <label for="shopIntro">简短介绍</label>
+                        <textarea id="shopIntro" placeholder="用一两句话介绍这家店的特色..." rows="2"></textarea>
+                    </div>
+
+                    <!-- 避坑小贴士 -->
+                    <div class="form-group">
+                        <label for="shopTips">探店避坑小贴士（每行一个）</label>
+                        <textarea id="shopTips" placeholder="排队高峰期是晚上6-8点&#10;推荐坐外面靠窗的位置&#10;辣椒酱是自制的记得问老板要" rows="3"></textarea>
+                        <p class="hint">分享实用的探店经验，帮其他人避坑</p>
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="generateAndPreview()">
+                            👁️ 生成预览
+                        </button>
+                        <button type="button" class="btn btn-copy" id="btnCopy" onclick="copyFormContent()" disabled>
+                            📋 一键复制
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="resetForm()">
+                            🔄 清空重填
+                        </button>
+                    </div>
+                </form>
+
+                <!-- 预览区 -->
+                <div class="preview-area" id="previewArea">
+                    <h4>📄 投稿内容预览（点击上方「一键复制」发送给站长）</h4>
+                    <div class="preview-text" id="previewText"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="site-footer">
+        <p>
+            <span class="footer-icon">🔥</span>
+            深圳小众烟火美食打卡 &copy; 2026
+            &nbsp;|&nbsp; 用心记录每一份街头好味道
+            <span class="footer-icon">🍜</span>
+        </p>
+    </footer>
+
+    <!-- ==================== 引入公用 JS ==================== -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- ==================== 关于页专属脚本 ==================== -->
+    <script>
+        /* ============================================================
+           关于页专属逻辑：投稿表单 + 生成预览 + 一键复制
+           ============================================================ */
+
+        /**
+         * 收集表单数据并生成格式化的投稿文本
+         * @returns {string} 格式化的投稿文本
+         */
+        function generateSubmitText() {
+            // 收集表单字段值
+            const name = document.getElementById('shopName').value.trim();
+            const district = document.getElementById('shopDistrict').value;
+            const price = document.getElementById('shopPrice').value.trim();
+            const address = document.getElementById('shopAddress').value.trim();
+            const hours = document.getElementById('shopHours').value.trim();
+            const tags = document.getElementById('shopTags').value.trim();
+            const signature = document.getElementById('shopSignature').value.trim();
+            const intro = document.getElementById('shopIntro').value.trim();
+            const tips = document.getElementById('shopTips').value.trim();
+
+            // 构建投稿文本（结构清晰，方便站长阅读）
+            const lines = [];
+            lines.push('═══════════════════════════════');
+            lines.push('  🍜 深圳烟火美食 - 新店投稿');
+            lines.push('═══════════════════════════════');
+            lines.push('');
+            lines.push(`🏪 店铺名称：${name}`);
+            lines.push(`📍 所在区域：${district}区`);
+            lines.push(`💰 人均价格：¥${price}`);
+            lines.push(`📌 精确地址：${address}`);
+            lines.push(`🕐 营业时间：${hours}`);
+            lines.push('');
+
+            if (tags) {
+                lines.push(`🏷️ 特色标签：${tags}`);
+                lines.push('');
+            }
+
+            if (signature) {
+                lines.push('🍽️ 招牌菜品：');
+                signature.split('\n').forEach(line => {
+                    if (line.trim()) lines.push(`   • ${line.trim()}`);
+                });
+                lines.push('');
+            }
+
+            if (intro) {
+                lines.push(`📝 店铺介绍：${intro}`);
+                lines.push('');
+            }
+
+            if (tips) {
+                lines.push('💡 探店小贴士：');
+                tips.split('\n').forEach(line => {
+                    if (line.trim()) lines.push(`   • ${line.trim()}`);
+                });
+                lines.push('');
+            }
+
+            lines.push('═══════════════════════════════');
+            lines.push('  投稿人联系方式（选填）：');
+            lines.push('  微信/手机：___________');
+            lines.push('═══════════════════════════════');
+
+            return lines.join('\n');
+        }
+
+        /**
+         * 生成预览内容并显示预览区
+         * 同时激活「一键复制」按钮
+         */
+        function generateAndPreview() {
+            // 校验必填字段
+            const name = document.getElementById('shopName').value.trim();
+            const district = document.getElementById('shopDistrict').value;
+            const price = document.getElementById('shopPrice').value.trim();
+            const address = document.getElementById('shopAddress').value.trim();
+            const hours = document.getElementById('shopHours').value.trim();
+
+            if (!name || !district || !price || !address || !hours) {
+                showToast('请填写所有必填字段（带 * 号的）再生成预览');
+                // 高亮未填写的必填字段
+                const fields = [
+                    { id: 'shopName', val: name },
+                    { id: 'shopDistrict', val: district },
+                    { id: 'shopPrice', val: price },
+                    { id: 'shopAddress', val: address },
+                    { id: 'shopHours', val: hours }
+                ];
+                fields.forEach(f => {
+                    const el = document.getElementById(f.id);
+                    if (!f.val && el) {
+                        el.style.borderColor = '#E53935';
+                        setTimeout(() => { el.style.borderColor = ''; }, 2000);
+                    }
+                });
+                return;
+            }
+
+            // 生成投稿文本
+            const text = generateSubmitText();
+
+            // 显示预览
+            const previewArea = document.getElementById('previewArea');
+            const previewText = document.getElementById('previewText');
+            previewText.textContent = text;
+            previewArea.classList.add('show');
+
+            // 激活复制按钮
+            const btnCopy = document.getElementById('btnCopy');
+            btnCopy.disabled = false;
+            btnCopy.textContent = '📋 一键复制';
+
+            // 滚动到预览区
+            previewArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            showToast('预览已生成，点击「一键复制」发送给站长 📋');
+        }
+
+        /**
+         * 一键复制投稿内容到剪贴板
+         * 优先使用 Clipboard API，回退到传统方法
+         */
+        function copyFormContent() {
+            const text = generateSubmitText();
+            const btnCopy = document.getElementById('btnCopy');
+
+            // 检查必填字段
+            const name = document.getElementById('shopName').value.trim();
+            if (!name) {
+                showToast('请先填写店铺名称并生成预览');
+                return;
+            }
+
+            // 尝试使用现代 Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        onCopySuccess(btnCopy);
+                    })
+                    .catch(() => {
+                        // API 失败，回退到传统方法
+                        fallbackCopy(text, btnCopy);
+                    });
+            } else {
+                // 不支持 Clipboard API，使用传统方法
+                fallbackCopy(text, btnCopy);
+            }
+        }
+
+        /**
+         * 传统复制方法（兼容旧浏览器）
+         * 通过创建临时 textarea 元素选中文本后执行 copy 命令
+         * @param {string} text - 要复制的文本
+         * @param {HTMLElement} btn - 复制按钮元素
+         */
+        function fallbackCopy(text, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    onCopySuccess(btn);
+                } else {
+                    onCopyFail(btn);
+                }
+            } catch (e) {
+                onCopyFail(btn);
+            }
+
+            document.body.removeChild(textarea);
+        }
+
+        /**
+         * 复制成功回调
+         * @param {HTMLElement} btn
+         */
+        function onCopySuccess(btn) {
+            btn.textContent = '✅ 已复制！';
+            btn.classList.add('btn-copy-success');
+            showToast('✅ 投稿内容已复制到剪贴板，快去发给站长吧！');
+
+            // 2秒后恢复按钮状态
+            setTimeout(() => {
+                btn.textContent = '📋 一键复制';
+                btn.classList.remove('btn-copy-success');
+            }, 2000);
+        }
+
+        /**
+         * 复制失败回调
+         * @param {HTMLElement} btn
+         */
+        function onCopyFail(btn) {
+            showToast('复制失败，请手动选中预览文本后 Ctrl+C 复制');
+            btn.textContent = '⚠️ 复制失败，请重试';
+            setTimeout(() => {
+                btn.textContent = '📋 一键复制';
+            }, 2000);
+        }
+
+        /**
+         * 清空表单所有字段
+         */
+        function resetForm() {
+            document.getElementById('shopSubmitForm').reset();
+            document.getElementById('previewArea').classList.remove('show');
+            document.getElementById('btnCopy').disabled = true;
+            document.getElementById('btnCopy').textContent = '📋 一键复制';
+            document.getElementById('btnCopy').classList.remove('btn-copy-success');
+            showToast('表单已清空 🔄');
+        }
+    </script>
+
+</body>
+</html>

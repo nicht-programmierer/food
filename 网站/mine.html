@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的打卡收藏 - 深圳小众烟火美食打卡</title>
+    <meta name="description" content="管理你的深圳美食打卡收藏，想去打卡和已经吃完打卡的记录都能长期保存。">
+    <!-- 引入公用 CSS 样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 收藏页专属样式 -->
+    <style>
+        /* ===== 收藏页面布局 ===== */
+        .mine-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ===== 统计面板 ===== */
+        .stats-panel {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid transparent;
+            transition: all var(--transition-fast);
+        }
+
+        .stat-card.want {
+            border-color: #FFD166;
+            background: linear-gradient(135deg, #FFFDE7, #FFF8E1);
+        }
+
+        .stat-card.eaten {
+            border-color: #A5D6A7;
+            background: linear-gradient(135deg, #F1F8E9, #E8F5E9);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            line-height: 1.2;
+        }
+
+        .stat-card.eaten .stat-number {
+            color: #43A047;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* ===== 分组标签切换 ===== */
+        .tab-switch {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .tab-btn .tab-icon {
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .tab-btn .tab-count {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* ===== 收藏列表 ===== */
+        .fav-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        /* 收藏列表项 */
+        .fav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            animation: cardSlideUp 0.4s ease backwards;
+        }
+
+        .fav-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .fav-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            overflow: hidden;
+        }
+
+        .fav-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fav-item-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            transition: color var(--transition-fast);
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fav-item-name:hover {
+            color: var(--color-primary);
+        }
+
+        .fav-item-meta {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .fav-item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-move {
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: var(--bg-warm);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-move:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-remove {
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: #FFEBEE;
+            color: #E53935;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-remove:hover {
+            background: #E53935;
+            color: white;
+        }
+
+        /* 空状态引导 */
+        .empty-guide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-xl);
+        }
+
+        .empty-guide .btn {
+            margin-top: var(--spacing-sm);
+        }
+
+        /* ===== 清除全部按钮 ===== */
+        .clear-all-section {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-danger-text {
+            background: none;
+            color: var(--text-light);
+            font-size: 0.82rem;
+            padding: 6px 12px;
+            border-radius: 15px;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-danger-text:hover {
+            color: #E53935;
+            background: #FFEBEE;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .fav-item {
+                flex-wrap: wrap;
+            }
+
+            .fav-item-actions {
+                flex-direction: row;
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .tab-btn {
+                min-width: 100px;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fav-item-img {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .fav-item-name {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 顶部导航栏 ==================== -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <!-- Logo -->
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🔥</span>
+                <span>深圳烟火美食</span>
+            </a>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="nav-toggle" aria-label="菜单">☰</button>
+
+            <!-- 导航链接 -->
+            <div class="nav-links">
+                <a href="index.html">🏠 首页</a>
+                <a href="list.html">📋 美食列表</a>
+                <a href="mine.html" class="active">💝 我的打卡</a>
+                <a href="about.html">ℹ️ 关于本站</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== 页面主体 ==================== -->
+    <main class="page-container">
+        <div class="mine-container">
+
+            <!-- ========== 页面标题 ========== -->
+            <div class="page-header">
+                <h1>💝 我的打卡收藏</h1>
+                <p class="subtitle">你的美食收藏记录会保存在浏览器中，不会丢失</p>
+            </div>
+
+            <!-- ========== 统计面板 ========== -->
+            <div class="stats-panel">
+                <div class="stat-card want">
+                    <div class="stat-number" id="statWantToGo">0</div>
+                    <div class="stat-label">⭐ 想去打卡</div>
+                </div>
+                <div class="stat-card eaten">
+                    <div class="stat-number" id="statAlreadyEaten">0</div>
+                    <div class="stat-label">✅ 已经吃完打卡</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">📊 全部收藏</div>
+                </div>
+            </div>
+
+            <!-- ========== 分组标签切换 ========== -->
+            <div class="tab-switch">
+                <button class="tab-btn active" data-tab="wantToGo" onclick="switchTab('wantToGo')">
+                    <span class="tab-icon">⭐</span>
+                    想去打卡
+                    <span class="tab-count" id="tabCountWantToGo">(0)</span>
+                </button>
+                <button class="tab-btn" data-tab="alreadyEaten" onclick="switchTab('alreadyEaten')">
+                    <span class="tab-icon">✅</span>
+                    已经吃完打卡
+                    <span class="tab-count" id="tabCountAlreadyEaten">(0)</span>
+                </button>
+            </div>
+
+            <!-- ========== 收藏列表 ========== -->
+            <div class="fav-list" id="favList">
+                <!-- 由 JS 动态渲染 -->
+            </div>
+
+            <!-- ========== 清除全部按钮 ========== -->
+            <div class="clear-all-section" id="clearAllSection" style="display: none;">
+                <button class="btn-danger-text" onclick="clearAllFavorites()">
+                    🗑️ 清除当前分组全部记录
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="site-footer">
+        <p>
+            <span class="footer-icon">🔥</span>
+            深圳小众烟火美食打卡 &copy; 2026
+            &nbsp;|&nbsp; 用心记录每一份街头好味道
+            <span class="footer-icon">🍜</span>
+        </p>
+    </footer>
+
+    <!-- ==================== 引入公用 JS ==================== -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- ==================== 收藏页专属脚本 ==================== -->
+    <script>
+        /* ============================================================
+           收藏页专属逻辑：分组切换 + 列表渲染 + 移动/删除操作
+           ============================================================ */
+
+        // 当前选中的标签页分组
+        let currentTab = 'wantToGo';
+
+        /**
+         * 更新统计面板数字
+         */
+        function updateStats() {
+            const fav = getFavorites();
+            const wantCount = fav.wantToGo.length;
+            const eatenCount = fav.alreadyEaten.length;
+
+            document.getElementById('statWantToGo').textContent = wantCount;
+            document.getElementById('statAlreadyEaten').textContent = eatenCount;
+            document.getElementById('statTotal').textContent = wantCount + eatenCount;
+
+            // 更新标签页计数
+            document.getElementById('tabCountWantToGo').textContent = `(${wantCount})`;
+            document.getElementById('tabCountAlreadyEaten').textContent = `(${eatenCount})`;
+        }
+
+        /**
+         * 切换标签页分组
+         * @param {string} tab - 'wantToGo' | 'alreadyEaten'
+         */
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // 更新按钮激活状态
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+
+            // 重新渲染列表
+            renderFavList();
+
+            // 更新清除按钮显示状态
+            updateClearAllButton();
+        }
+
+        /**
+         * 渲染当前分组的收藏列表
+         */
+        function renderFavList() {
+            const listEl = document.getElementById('favList');
+            const fav = getFavorites();
+            const shopIds = fav[currentTab];
+
+            if (shopIds.length === 0) {
+                // 空状态
+                const emptyMessages = {
+                    wantToGo: {
+                        icon: '📝',
+                        title: '还没有想去打卡的店铺',
+                        subtitle: '去美食列表逛逛，收藏你感兴趣的店铺吧！',
+                        link: 'list.html',
+                        linkText: '🍜 去美食列表看看'
+                    },
+                    alreadyEaten: {
+                        icon: '🍽️',
+                        title: '还没有吃完打卡的记录',
+                        subtitle: '吃完记得回来打卡标记哦！',
+                        link: 'list.html',
+                        linkText: '🍜 去美食列表看看'
+                    }
+                };
+
+                const msg = emptyMessages[currentTab];
+                listEl.innerHTML = `
+                    <div class="empty-state empty-guide">
+                        <span class="empty-icon">${msg.icon}</span>
+                        <p>${msg.title}</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem;">${msg.subtitle}</p>
+                        <a href="${msg.link}" class="btn btn-primary">${msg.linkText}</a>
+                    </div>`;
+
+                // 隐藏清除按钮
+                document.getElementById('clearAllSection').style.display = 'none';
+                return;
+            }
+
+            // 构建列表项 HTML
+            let html = '';
+            shopIds.forEach((shopId, index) => {
+                const shop = getShopById(shopId);
+                if (!shop) return; // 如果店铺数据已被删除，跳过
+
+                const moveTarget = currentTab === 'wantToGo' ? 'alreadyEaten' : 'wantToGo';
+                const moveLabel = currentTab === 'wantToGo' ? '✅ 标记已吃' : '⭐ 还想再去';
+                const moveIcon = currentTab === 'wantToGo' ? '✅' : '⭐';
+
+                // 标签
+                const tagsHTML = shop.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+                html += `
+                    <div class="fav-item" style="animation-delay: ${index * 0.08}s">
+                        <a href="detail.html?id=${shop.id}" class="fav-item-img food-img-placeholder ${shop.thumbnail}">
+                            <span>${shop.emoji}</span>
+                        </a>
+                        <div class="fav-item-info">
+                            <a href="detail.html?id=${shop.id}" class="fav-item-name">${shop.name}</a>
+                            <div class="fav-item-meta">
+                                <span class="tag tag-district">📍 ${shop.area}</span>
+                                <span>💰 人均¥${shop.price}</span>
+                            </div>
+                            <div style="margin-top: 4px; display: flex; flex-wrap: wrap; gap: 3px;">
+                                ${tagsHTML}
+                            </div>
+                        </div>
+                        <div class="fav-item-actions">
+                            <button class="btn-move" onclick="moveFavItem(${shop.id}, '${currentTab}', '${moveTarget}')">
+                                ${moveIcon} ${moveLabel}
+                            </button>
+                            <button class="btn-remove" onclick="removeFavItem(${shop.id}, '${currentTab}')">
+                                🗑️ 移除
+                            </button>
+                        </div>
+                    </div>`;
+            });
+
+            listEl.innerHTML = html;
+            updateClearAllButton();
+        }
+
+        /**
+         * 移动收藏项到另一个分组
+         * @param {number} shopId
+         * @param {string} fromGroup
+         * @param {string} toGroup
+         */
+        function moveFavItem(shopId, fromGroup, toGroup) {
+            const shop = getShopById(shopId);
+            moveFavorite(shopId, fromGroup, toGroup);
+            const groupName = toGroup === 'wantToGo' ? '想去打卡' : '已经吃完打卡';
+            showToast(`「${shop.name}」已移至${groupName}`);
+            updateStats();
+            renderFavList();
+        }
+
+        /**
+         * 移除收藏项
+         * @param {number} shopId
+         * @param {string} group
+         */
+        function removeFavItem(shopId, group) {
+            const shop = getShopById(shopId);
+            toggleFavorite(shopId, group);
+            showToast(`已移除「${shop.name}」`);
+            updateStats();
+            renderFavList();
+        }
+
+        /**
+         * 清除当前分组全部记录
+         */
+        function clearAllFavorites() {
+            const fav = getFavorites();
+            const count = fav[currentTab].length;
+            if (count === 0) return;
+
+            const groupName = currentTab === 'wantToGo' ? '想去打卡' : '已经吃完打卡';
+            const confirmed = confirm(`确定要清除「${groupName}」中的全部 ${count} 条记录吗？此操作无法撤销。`);
+
+            if (confirmed) {
+                fav[currentTab] = [];
+                saveFavorites(fav);
+                showToast(`已清除「${groupName}」全部记录`);
+                updateStats();
+                renderFavList();
+            }
+        }
+
+        /**
+         * 更新清除全部按钮的显示状态
+         */
+        function updateClearAllButton() {
+            const fav = getFavorites();
+            const count = fav[currentTab].length;
+            document.getElementById('clearAllSection').style.display = count > 0 ? 'block' : 'none';
+        }
+
+        /* ========== 页面初始化 ========== */
+        function initMinePage() {
+            updateStats();
+            renderFavList();
+        }
+
+        // 启动收藏页
+        initMinePage();
+    </script>
+
+</body>
+</html>

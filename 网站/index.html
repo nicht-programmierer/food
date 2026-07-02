@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深圳小众烟火美食打卡 - 发现街头好味道</title>
+    <meta name="description" content="深圳小众烟火美食打卡平台，发现藏在深圳街头巷尾的地道小吃，记录你的美食探店之旅。">
+    <!-- 引入公用 CSS 样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 首页专属样式 -->
+    <style>
+        /* ===== 首页 Hero 区域 ===== */
+        .hero {
+            text-align: center;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.3;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto var(--spacing-xl);
+        }
+
+        /* ===== 轮播图区域 ===== */
+        .carousel-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .carousel-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            text-align: left;
+        }
+
+        .carousel-caption h3 {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .carousel-caption p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* 轮播按钮 */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.85);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .carousel-btn.prev { left: 12px; }
+        .carousel-btn.next { right: 12px; }
+
+        /* 轮播指示器 */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: var(--spacing-md);
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: var(--color-primary);
+            width: 28px;
+            border-radius: 5px;
+        }
+
+        /* ===== 盲盒区域 ===== */
+        .blind-box-section {
+            text-align: center;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+            background: var(--bg-warm);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 装饰性背景图案 */
+        .blind-box-section::before {
+            content: '🍜 🍲 🥟 🍚 🍖 🦪 🍝 🥣';
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.08;
+            top: -20px;
+            left: -10px;
+            right: -10px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .blind-box-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: var(--spacing-md);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .blind-box-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .blind-box-desc {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-size: 0.95rem;
+        }
+
+        .blind-box-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.35);
+            transition: all var(--transition-normal);
+            animation: fireGlow 2.5s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        .blind-box-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .blind-box-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== 推荐店铺预览区 ===== */
+        .preview-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        /* 店铺卡片补充样式 */
+        .shop-card {
+            display: flex;
+            flex-direction: column;
+            animation: cardSlideUp 0.5s ease backwards;
+        }
+
+        .shop-card-img-link {
+            display: block;
+            overflow: hidden;
+        }
+
+        .shop-card-img-link .food-img-placeholder {
+            transition: transform 0.4s ease;
+        }
+
+        .shop-card:hover .food-img-placeholder {
+            transform: scale(1.05);
+        }
+
+        .shop-card-body {
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            flex: 1;
+        }
+
+        .shop-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shop-card-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color var(--transition-fast);
+        }
+
+        .shop-card-name:hover {
+            color: var(--color-primary);
+        }
+
+        .shop-card-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .shop-card-price {
+            color: var(--color-secondary);
+            font-weight: 600;
+        }
+
+        .shop-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .shop-card-intro {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: auto;
+        }
+
+        /* 关于本站入口卡片 */
+        .about-teaser {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, var(--bg-warm), #FFF0E0);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .about-teaser p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .preview-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+
+            .blind-box-btn {
+                padding: 14px 32px;
+                font-size: 1.05rem;
+            }
+
+            .carousel-img {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blind-box-btn {
+                padding: 12px 28px;
+                font-size: 1rem;
+                width: 90%;
+                justify-content: center;
+            }
+
+            .carousel-img {
+                font-size: 2.8rem;
+                aspect-ratio: 4 / 3;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 顶部导航栏 ==================== -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <!-- Logo -->
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">🔥</span>
+                <span>深圳烟火美食</span>
+            </a>
+
+            <!-- 移动端菜单按钮 -->
+            <button class="nav-toggle" aria-label="菜单">☰</button>
+
+            <!-- 导航链接 -->
+            <div class="nav-links">
+                <a href="index.html" class="active">🏠 首页</a>
+                <a href="list.html">📋 美食列表</a>
+                <a href="mine.html">💝 我的打卡</a>
+                <a href="about.html">ℹ️ 关于本站</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== 页面主体 ==================== -->
+    <main class="page-container">
+
+        <!-- ========== Hero 区域 ========== -->
+        <section class="hero">
+            <h1 class="hero-title">
+                发现深圳 <span class="highlight">街头烟火</span> 好味道
+            </h1>
+            <p class="hero-subtitle">
+                不追网红店，只探藏在巷子里的真实美味
+            </p>
+        </section>
+
+        <!-- ========== 轮播图区域 ========== -->
+        <section class="carousel-section">
+            <div class="carousel-container" id="carousel">
+                <!-- 轮播轨道，由 JS 动态生成 -->
+                <div class="carousel-track" id="carouselTrack"></div>
+
+                <!-- 左右切换按钮 -->
+                <button class="carousel-btn prev" id="carouselPrev" aria-label="上一张">❮</button>
+                <button class="carousel-btn next" id="carouselNext" aria-label="下一张">❯</button>
+            </div>
+            <!-- 轮播指示器圆点 -->
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+        </section>
+
+        <!-- ========== 盲盒随机推荐区域 ========== -->
+        <section class="blind-box-section">
+            <span class="blind-box-icon">🎁</span>
+            <h2 class="blind-box-title">随机抽一家小吃</h2>
+            <p class="blind-box-desc">
+                选择困难症犯了？让命运帮你决定今天吃什么！
+            </p>
+            <button class="blind-box-btn" onclick="openBlindBox()">
+                🎲 戳我抽一家
+            </button>
+        </section>
+
+        <!-- ========== 热门推荐预览区 ========== -->
+        <section class="preview-section">
+            <h2 class="section-title">🔥 热门推荐</h2>
+            <div class="preview-grid" id="previewGrid">
+                <!-- 由 JS 动态渲染前6家店铺卡片 -->
+            </div>
+        </section>
+
+        <!-- ========== 关于本站入口 ========== -->
+        <section class="about-teaser">
+            <p>🍜 你也有私藏的深圳宝藏小店？</p>
+            <a href="about.html" class="btn btn-primary">📝 投稿推荐店铺</a>
+        </section>
+
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="site-footer">
+        <p>
+            <span class="footer-icon">🔥</span>
+            深圳小众烟火美食打卡 &copy; 2026
+            &nbsp;|&nbsp; 用心记录每一份街头好味道
+            <span class="footer-icon">🍜</span>
+        </p>
+    </footer>
+
+    <!-- ==================== 引入公用 JS ==================== -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- ==================== 首页专属脚本 ==================== -->
+    <script>
+        /* ============================================================
+           首页专属逻辑：轮播图 + 盲盒 + 热门推荐渲染
+           ============================================================ */
+
+        /* ---------- 轮播图模块 ---------- */
+        // 轮播图数据：挑4家有代表性的店铺做展示
+        const carouselShops = [foodShops[0], foodShops[4], foodShops[7], foodShops[10]];
+        let currentSlide = 0;          // 当前展示的幻灯片索引
+        let carouselTimer = null;      // 自动播放定时器
+        const AUTO_PLAY_INTERVAL = 4000; // 自动播放间隔（毫秒）
+
+        /**
+         * 初始化轮播图
+         */
+        function initCarousel() {
+            const track = document.getElementById('carouselTrack');
+            const indicators = document.getElementById('carouselIndicators');
+
+            // 生成轮播幻灯片 HTML
+            track.innerHTML = carouselShops.map((shop, index) => `
+                <div class="carousel-slide">
+                    <a href="detail.html?id=${shop.id}">
+                        <div class="carousel-img ${shop.thumbnail}">
+                            <span>${shop.emoji}</span>
+                        </div>
+                        <div class="carousel-caption">
+                            <h3>${shop.name}</h3>
+                            <p>📍 ${shop.area} · 💰 人均¥${shop.price} · ${shop.tags.slice(0,2).join(' / ')}</p>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+
+            // 生成指示器圆点
+            indicators.innerHTML = carouselShops.map((_, i) => `
+                <button class="carousel-dot ${i === 0 ? 'active' : ''}"
+                        data-index="${i}"
+                        aria-label="第${i + 1}张"></button>
+            `).join('');
+
+            // 绑定圆点点击事件
+            indicators.querySelectorAll('.carousel-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.dataset.index);
+                    goToSlide(index);
+                    resetAutoPlay(); // 手动操作后重置自动播放计时器
+                });
+            });
+
+            // 绑定左右按钮
+            document.getElementById('carouselPrev').addEventListener('click', () => {
+                goToSlide(currentSlide - 1);
+                resetAutoPlay();
+            });
+            document.getElementById('carouselNext').addEventListener('click', () => {
+                goToSlide(currentSlide + 1);
+                resetAutoPlay();
+            });
+
+            // 启动自动播放
+            startAutoPlay();
+        }
+
+        /**
+         * 切换到指定幻灯片
+         * @param {number} index - 目标索引（支持循环）
+         */
+        function goToSlide(index) {
+            const total = carouselShops.length;
+            // 循环处理：-1 → 最后一张，超出 → 第一张
+            currentSlide = ((index % total) + total) % total;
+
+            // 移动轨道
+            const track = document.getElementById('carouselTrack');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // 更新指示器状态
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        /**
+         * 启动自动播放
+         */
+        function startAutoPlay() {
+            stopAutoPlay(); // 先清除已有的定时器
+            carouselTimer = setInterval(() => {
+                goToSlide(currentSlide + 1);
+            }, AUTO_PLAY_INTERVAL);
+        }
+
+        /**
+         * 停止自动播放
+         */
+        function stopAutoPlay() {
+            if (carouselTimer) {
+                clearInterval(carouselTimer);
+                carouselTimer = null;
+            }
+        }
+
+        /**
+         * 重置自动播放（用户手动操作后调用）
+         */
+        function resetAutoPlay() {
+            stopAutoPlay();
+            startAutoPlay();
+        }
+
+        /* ========== 盲盒模块 ========== */
+        /**
+         * 打开盲盒：随机抽取一家推荐
+         */
+        function openBlindBox() {
+            const shop = getRandomShop();
+            showBlindBoxModal(shop);
+        }
+
+        /* ========== 热门推荐渲染 ========== */
+        /**
+         * 渲染首页热门推荐（取前6家，打乱顺序增加随机感）
+         */
+        function renderPreviewGrid() {
+            const grid = document.getElementById('previewGrid');
+            // 取前6家店铺并随机打乱顺序
+            const shuffled = [...foodShops].sort(() => Math.random() - 0.5).slice(0, 6);
+            grid.innerHTML = shuffled.map(shop => createShopCardHTML(shop)).join('');
+        }
+
+        /* ========== 页面初始化 ========== */
+        function initHomePage() {
+            initCarousel();
+            renderPreviewGrid();
+        }
+
+        // 启动首页
+        initHomePage();
+    </script>
+
+</body>
+</html>
